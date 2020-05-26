@@ -61,4 +61,14 @@ class Api
     {
         return $this->client->post('parcels/'.$id.'/cancel');
     }
+
+    /**
+     * @return array
+     * @throws Exception\SendcloudException
+     */
+    public function getShippingMethods()
+    {
+        $response = $this->client->get('shipping_methods');
+        return $response['shipping_methods'];
+    }
 }

@@ -114,6 +114,22 @@ class SendcloudClient
     }
 
     /**
+     * @param $url
+     * @return mixed
+     * @throws SendcloudException
+     */
+    public function download($url)
+    {
+        try {
+            $result = $this->client->get($url);
+            return $result->getBody()->getContents();
+
+        } catch (RequestException $e) {
+            throw new SendcloudException('Sendcloud error: ' . $e->getMessage(), $e->getResponse()->getStatusCode());
+        }
+    }
+
+    /**
      * @param ResponseInterface $response
      * @return array
      * @throws SendcloudException
