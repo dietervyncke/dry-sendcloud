@@ -37,11 +37,11 @@ class SendcloudClient
 
         } catch (RequestException $e) {
             if ($e->hasResponse()) {
-                throw new SendcloudException($e->getResponse());
+                $this->parseResponse($e->getResponse());
             }
         }
 
-        throw new SendcloudException('Sendcloud error '.$e->getResponse()->getStatusCode());
+        throw new SendcloudException('Sendcloud error (method: GET)', $e->getResponse()->getStatusCode());
     }
 
     /**
@@ -59,17 +59,14 @@ class SendcloudClient
 
             return $this->parseResponse($response);
 
-        } catch (ClientException $e) {
-            throw new SendcloudException('Sendcloud error '.$e->getResponse()->getStatusCode());
-
         } catch (RequestException $e) {
 
             if ($e->hasResponse()) {
                 $this->parseResponse($e->getResponse());
             }
-        }
 
-        throw new SendcloudException('Sendcloud error '.$e->getResponse()->getStatusCode());
+            throw new SendcloudException('Sendcloud error (method: POST) '.$e->getResponse()->getBody()->getContents(), $e->getResponse()->getStatusCode());
+        }
     }
 
     public function put(string $endPoint, $body): array
@@ -82,7 +79,7 @@ class SendcloudClient
             return $this->parseResponse($response);
 
         } catch (ClientException $e) {
-            throw new SendcloudException('Sendcloud error '.$e->getResponse()->getStatusCode());
+            throw new SendcloudException('Sendcloud error (ClientException)'. $e->getResponse()->getBody()->getContents(), $e->getResponse()->getStatusCode());
 
         } catch (RequestException $e) {
 
@@ -91,7 +88,7 @@ class SendcloudClient
             }
         }
 
-        throw new SendcloudException('Sendcloud error '.$e->getResponse()->getStatusCode());
+        throw new SendcloudException('Sendcloud error (method: PUT)', $e->getResponse()->getStatusCode());
     }
 
     /**
@@ -105,12 +102,13 @@ class SendcloudClient
             return $this->parseResponse($this->client->delete($endPoint));
 
         } catch (RequestException $e) {
-            if ($e->hasResponse()) {
-                throw new SendcloudException($e->getResponse());
-            }
-        }
 
-        throw new SendcloudException('Sendcloud error '.$e->getResponse()->getStatusCode());
+            if ($e->hasResponse()) {
+                $this->parseResponse($e->getResponse());
+            }
+
+            throw new SendcloudException('Sendcloud error (method: DELETE)', $e->getResponse()->getStatusCode());
+        }
     }
 
     /**
@@ -140,6 +138,17 @@ class SendcloudClient
 
             $responseBody = $response->getBody()->getContents();
             $resultArray = json_decode($responseBody, true);
+
+            if (! is_array($resultArray)) {
+                throw new SendcloudException(sprintf('SendCloud error %s: %s', $response->getStatusCode(), $responseBody), $response->getStatusCode());
+            }
+
+            if (array_key_exists('error', $resultArray)
+                && is_array($resultArray['error'])
+                && array_key_exists('message', $resultArray['error'])
+            ) {
+                throw new SendcloudException('SendCloud error: ' . $resultArray['error']['message'], $resultArray['error']['code']);
+            }
 
             return $resultArray;
 
