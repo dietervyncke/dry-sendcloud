@@ -14,6 +14,7 @@ use Oak\ServiceProvider;
 use Tnt\Sendcloud\Client\SendcloudClient;
 use Tnt\Sendcloud\Console\Sendcloud;
 use Tnt\Sendcloud\Controller\WebhookController;
+use Tnt\Sendcloud\Revisions\AlterParcelTableFixFKLabel;
 use Tnt\Sendcloud\Revisions\CreateLabelTable;
 use Tnt\Sendcloud\Revisions\CreateParcelTable;
 use Tnt\Sendcloud\Revisions\CreateShipmentMethodTable;
@@ -32,6 +33,7 @@ class SendcloudServiceProvider extends ServiceProvider
                 CreateLabelTable::class,
                 CreateShipmentMethodTable::class,
                 CreateParcelTable::class,
+                AlterParcelTableFixFKLabel::class,
             ]);
 
             $app->get(MigrationManager::class)
