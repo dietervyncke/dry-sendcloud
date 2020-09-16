@@ -3,28 +3,34 @@ Dry PHP Client for Sendcloud API (unofficial client).
 
 Full docs of the Sendcloud API can be found on https://docs.sendcloud.sc/api/v2/shipping/
 
-#### Index
+## Index
 
 * [Installation](#installation)
 * [Usage](#usage)
+    * [Register](#register-the-service-provider)
+    * [Create parcel & label](#create-parcel--label)
+    * [Get all parcels](#get-all-parcels)
+    * [Get parcel by id](#get-parcel-by-id)
+    * [Get all active Sendcloud Shipping Methods](#get-all-active-sendcloud-shipping-methods)
+    * [Get a label by parcel id](#get-a-label-by-parcel-id)
 
-#### Installation
+## Installation
 ```ssh
 composer require dietervyncke/dry-sendcloud
 
 php oak migration migrate -m sendcloud
 ```
 
-##### Config options
+## Config options
 Name					      | Default
 ------------------- | ---------------------------------------------------------
 api_url             | 
 public_api          |
 secret_api          |
 
-#### Usage
+## Usage
 
-##### Register the service provider
+### Register the service provider
 ```php
 <?php
 
@@ -37,9 +43,7 @@ $app->register([
 $app->bootstrap();
 ```
 
-##### Implementation example
-
-###### Create Parcel & Label
+### Create Parcel & Label
 
 ```php
 <?php
@@ -94,7 +98,7 @@ $parcel->label = $label;
 $parcel->save();
 ```
 
-###### Get all parcels
+### Get all parcels
 Returns an array of all created Parcels
 ```
 <?php
@@ -102,7 +106,7 @@ Returns an array of all created Parcels
 $parcels = $sendcloudApi->getParcels();
 ```
 
-###### Get parcel by id
+### Get parcel by id
 Returns an array of a Parcel
 ```
 <?php
@@ -110,7 +114,7 @@ Returns an array of a Parcel
 $parcel = $sendcloudApi->getParcel(12345);
 ```
 
-###### Get all active Sendcloud Shipping methods
+### Get all active Sendcloud Shipping methods
 Returns an array of a Shipment methods results
 ```
 <?php
@@ -118,7 +122,7 @@ Returns an array of a Shipment methods results
 $shippingMethods = $sendcloudApi->getShippingMethods();
 ```
 
-###### Get a label by parcel id
+### Get a label by parcel id
 ```
 <?php
 
