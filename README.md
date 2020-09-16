@@ -39,9 +39,7 @@ $app->bootstrap();
 
 ##### Implementation example
 
-###### Create parcel
-
-More info 
+###### Create Parcel & Label
 
 ```php
 <?php
@@ -69,9 +67,6 @@ try {
   echo $exception->getMessage();
 }
 
-/**
- * Create Parcel
- */
 $parcel = new Tnt\Sendcloud\Model\Parcel();
 $parcel->created = time();
 $parcel->updated = time();
@@ -88,9 +83,6 @@ $parcel->is_return = $scParcel['is_return'];
 $parcel->shipment_method = 1;
 $parcel->save();
 
-/**
-* Create Label
-*/
 $label = new Tnt\Sendcloud\Model\Label();
 $label->created = time();
 $label->updated = time();
@@ -100,5 +92,35 @@ $label->save();
 
 $parcel->label = $label;
 $parcel->save();
+```
 
+###### Get all parcels
+Returns an array of all created Parcels
+```
+<?php
+
+$parcels = $sendcloudApi->getParcels();
+```
+
+###### Get parcel by id
+Returns an array of a Parcel
+```
+<?php
+
+$parcel = $sendcloudApi->getParcel(12345);
+```
+
+###### Get all active Sendcloud Shipping methods
+Returns an array of a Shipment methods results
+```
+<?php
+
+$shippingMethods = $sendcloudApi->getShippingMethods();
+```
+
+###### Get a label by parcel id
+```
+<?php
+
+$labelContents = $sendcloudClient->download('12345');
 ```
